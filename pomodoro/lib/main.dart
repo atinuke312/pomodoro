@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:english_words/english_words.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -55,6 +58,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+
+
+
+
   var selectedIndex = 0;
   List<bool> _selections = List.generate(3, (_) => false);
   @override
@@ -64,13 +71,10 @@ class _MyHomePageState extends State<MyHomePage> {
     switch(selectedIndex){
       case 0:
         page = PomodoroPage();
-        break;
       case 1:
         page = Placeholder();
-        break;
       case 2:
         page = Placeholder();
-        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -82,11 +86,6 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Text('pomodoro'),
             ToggleButtons(
-                children: [
-                  Text('pomodoro'),
-                  Text('short break'),
-                  Text('long break')
-                ],
                 isSelected: _selections,
                 onPressed: (int index){
                   setState(() {
@@ -96,6 +95,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     selectedIndex = index;
                   });
                 },
+                children: [
+                  Text('pomodoro'),
+                  Text('short break'),
+                  Text('long break')
+                ],
             ),
             Expanded(
                 child: Container(
@@ -109,12 +113,73 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class PomodoroPage extends StatelessWidget{
+class PomodoroPage extends StatefulWidget{
+  @override
+  State<PomodoroPage> createState() => _PomodoroPageState();
+}
+
+class _PomodoroPageState extends State<PomodoroPage> {
+  late Stopwatch stopwatch;
+  late Timer t;
+
+  void handleStartStop(){
+    if(stopwatch.isRunning){
+      stopwatch.stop();
+    } else {
+      stopwatch.start();
+    }
+  }
+
+
+
+  @override
+  void initState(){
+    super.initState();
+    stopwatch = Stopwatch();
+
+    t = Timer.periodic(Duration(milliseconds: 30), (timer) {
+      setState(() {});
+    });
+
+  }
+
+
+  String returnFormattedText(){
+    var milli = stopwatch.elapsed.inMilliseconds;
+
+    String seconds = ((milli ~/ 1000) % 60).toString();
+    String minutes = ((milli ~/ 1000) ~/ 60).toString();
+
+    return "$minutes:$seconds";
+  }
   @override
   Widget build(BuildContext context) {
 
-    return(
-    Text('Pomodoro')
+    return Column(
+      children: [
+        Text("pomodoro"),
+        CupertinoButton(
+            child: Container (
+              height: 300,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.black,
+                  width: 4
+                )
+              ),
+                child: Text(
+                  returnFormattedText(),
+
+                ))
+
+
+            , onPressed: () {
+              handleStartStop();
+        })
+      ],
+
     );
   }
 }
