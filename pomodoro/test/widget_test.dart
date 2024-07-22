@@ -7,9 +7,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:namer_app/main.dart';
+import 'package:namer_app/main1.dart';
 
-// import 'package:pomodoro/main.dart';
+// import 'package:pomodoro/main1.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
